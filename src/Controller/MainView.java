@@ -3,8 +3,8 @@ package Controller;
 import Model.ToDoListItem;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 public class MainView extends JFrame {
@@ -35,6 +35,7 @@ public class MainView extends JFrame {
     private void addItemToDo(String item) {
         ToDoListItem newItem = new ToDoListItem(item, false);
         listToDo.add(newItem);
+        addTaskTextField.setText("");
         setList();
     }
 
@@ -75,6 +76,29 @@ public class MainView extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 deleteItemToDo();
 
+            }
+        });
+        addTaskTextField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                super.focusGained(e);
+                addTaskTextField.setText("");
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                super.focusLost(e);
+                addTaskTextField.setText("Enter A Task");
+            }
+        });
+        addTaskTextField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                    String newItem = addTaskTextField.getText();
+                    addItemToDo(newItem);
+                }
             }
         });
     }
