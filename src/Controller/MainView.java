@@ -1,13 +1,22 @@
 package Controller;
 
+import DAO.GetTextFile;
 import Model.ToDoListItem;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainView extends JFrame {
+
+    static JMenuBar mb;
+
+    static JMenu fileMenu;
+
+    static JMenuItem newItem, openItem, saveItem, exitItem;
+
     private JPanel panel1;
     private JTextField addTaskTextField;
     private JLabel titleLabel;
@@ -56,6 +65,22 @@ public class MainView extends JFrame {
 
 
     public MainView() {
+        mb = new JMenuBar();
+
+        fileMenu = new JMenu("File");
+
+        newItem = new JMenuItem("New List");
+        openItem = new JMenuItem("Open List");
+        saveItem = new JMenuItem("Save List");
+        exitItem = new JMenuItem("Exit");
+        fileMenu.add(newItem);
+        fileMenu.add(openItem);
+        fileMenu.add(saveItem);
+        fileMenu.add(exitItem);
+        mb.add(fileMenu);
+        setJMenuBar(mb);
+
+
         setList();
         setTitle("TaskIt");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -78,19 +103,6 @@ public class MainView extends JFrame {
 
             }
         });
-        addTaskTextField.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                super.focusGained(e);
-                addTaskTextField.setText("");
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                super.focusLost(e);
-                addTaskTextField.setText("Enter A Task");
-            }
-        });
         addTaskTextField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -99,6 +111,27 @@ public class MainView extends JFrame {
                     String newItem = addTaskTextField.getText();
                     addItemToDo(newItem);
                 }
+            }
+        });
+
+        openItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    GetTextFile openFile = new GetTextFile();
+                    listToDo = openFile.getNewList();
+                    setList();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+            }
+        });
+
+        exitItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
             }
         });
     }
