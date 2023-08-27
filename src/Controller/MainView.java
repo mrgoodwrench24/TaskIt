@@ -35,10 +35,17 @@ public class MainView extends JFrame {
     private ArrayList<ToDoListItem> listToDo = new ArrayList<>();
 
     private void setList() {
+        String status = "";
         ArrayList<ToDoListItem> newList = new ArrayList<>(listToDo);
         listModel.clear();
         for (ToDoListItem item : newList) {
-            listModel.addElement(item.getListItem());
+            if(item.getComplete()){
+                status = "Completed";
+            }
+            else{
+                status = "Not Complete";
+            }
+            listModel.addElement(item.getListItem() + ": " + status);
         }
         list1.setModel(listModel);
 
@@ -60,6 +67,12 @@ public class MainView extends JFrame {
             listToDo.remove(listToDo.get(i));
             setList();
         }
+    }
+
+    private void markItemComplete(int indexOfItem, Boolean completed){
+        String itemName = listToDo.get(indexOfItem).getListItem();
+        listToDo.get(indexOfItem).setComplete(true);
+        setList();
     }
 
     private void moveItem(int index, int direction){
@@ -159,7 +172,7 @@ public class MainView extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                JFileChooser fileChooser = new JFileChooser();
+                JFileChooser fileChooser = new JFileChooser(new File("."));
                 int result = fileChooser.showSaveDialog(null);
                 GetTextFile saveFile = new GetTextFile(fileChooser.getSelectedFile());
 
@@ -199,6 +212,12 @@ public class MainView extends JFrame {
                 int index = list1.getSelectedIndex();
                 moveItem(index, 1);
 
+            }
+        });
+        markCompleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                markItemComplete(list1.getSelectedIndex(), true);
             }
         });
     }

@@ -27,3 +27,6 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+/src/saveTest.txt
+/src/pizzaToDo.txt
+/src/test.txt
