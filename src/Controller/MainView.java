@@ -5,7 +5,9 @@ import Model.ToDoListItem;
 
 import javax.swing.*;
 import java.awt.event.*;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -150,6 +152,30 @@ public class MainView extends JFrame {
                 setList();
 
 
+            }
+        });
+
+        saveItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                JFileChooser fileChooser = new JFileChooser();
+                int result = fileChooser.showSaveDialog(null);
+                GetTextFile saveFile = new GetTextFile(fileChooser.getSelectedFile());
+
+                if(result == JFileChooser.APPROVE_OPTION){
+                    try {
+                        saveFile.writeFile(listToDo, fileChooser.getSelectedFile());
+                        System.out.println("File saved successfully.");
+
+
+                    }catch (IOException ex){
+                        System.out.println("Error saving File: " + ex.getMessage());
+                    }
+                }
+                else {
+                    System.out.println("File selection canceled.");
+                }
             }
         });
 

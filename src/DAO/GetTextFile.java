@@ -22,24 +22,42 @@ public class GetTextFile {
 
     public void readFile() throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(file));
-        while((lineRead = br.readLine()) != null){
+        while ((lineRead = br.readLine()) != null) {
             String[] partsOfLine = lineRead.split("::");
             String taskName = partsOfLine[0];
             String status = partsOfLine[1];
             status.toLowerCase();
 
-            if(status.equals("complete")){
+            if (status.equals("complete")) {
                 isComplete = true;
-            }
-            else{
+            } else {
                 isComplete = false;
             }
             ToDoListItem todoItem = new ToDoListItem(taskName, isComplete);
             newList.add(todoItem);
         }
+        br.close();
     }
 
     public ArrayList<ToDoListItem> getNewList() {
         return newList;
+    }
+
+    public void writeFile(ArrayList<ToDoListItem> itemList, File outputFile) throws IOException {
+        BufferedWriter bw = new BufferedWriter(new FileWriter(outputFile));
+        for (ToDoListItem item : itemList) {
+            String taskName = item.getListItem();
+            Boolean isComplete = item.getComplete();
+            String status = "";
+            if (item.getComplete() == true) {
+                status = "complete";
+            } else {
+                status = "not complete";
+            }
+            String line = taskName + "::" + status;
+            bw.write(line);
+            bw.newLine(); // Add a new line after each item
+        }
+        bw.close();
     }
 }
