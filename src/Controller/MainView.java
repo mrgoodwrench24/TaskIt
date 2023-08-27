@@ -5,6 +5,7 @@ import Model.ToDoListItem;
 
 import javax.swing.*;
 import java.awt.event.*;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -137,13 +138,17 @@ public class MainView extends JFrame {
         openItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                JFileChooser jf = new JFileChooser(new File("."));
+                jf.showSaveDialog(null);
+                GetTextFile openFile = new GetTextFile(jf.getSelectedFile());
                 try {
-                    GetTextFile openFile = new GetTextFile();
-                    listToDo = openFile.getNewList();
-                    setList();
+                    openFile.readFile();
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
+                listToDo = openFile.getNewList();
+                setList();
+
 
             }
         });
