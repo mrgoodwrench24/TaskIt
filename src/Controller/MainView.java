@@ -126,6 +126,14 @@ public class MainView extends JFrame {
             }
         });
 
+        newItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                listToDo.clear();
+                setList();
+            }
+        });
+
         openItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
