@@ -4,7 +4,6 @@ import DAO.GetTextFile;
 import Model.ToDoListItem;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,6 +24,8 @@ public class MainView extends JFrame {
     private JButton addTaskButton;
     private JButton markCompleteButton;
     private JButton deleteTaskButton;
+    private JButton moveItemUp;
+    private JButton moveItemDown;
 
     DefaultListModel<String> listModel = new DefaultListModel<>(); // Create a DefaultListModel
 
@@ -49,18 +50,29 @@ public class MainView extends JFrame {
     }
 
     private void deleteItemToDo() {
-        String selectedItem = (String) list1.getSelectedValue();
-        System.out.println(selectedItem);
-        ToDoListItem deleteItem = new ToDoListItem(selectedItem, false);
-        if(selectedItem != null){
-            for(int i = 0; i < listToDo.size(); i++){
-                if(deleteItem.getListItem().equals(listToDo.get(i).getListItem())){
-                    listToDo.remove(i);
-                    break;
-                }
-            }
+        //String selectedItem = (String) list1.getSelectedValue();
+        int i = list1.getSelectedIndex();
+        //ToDoListItem deleteItem = new ToDoListItem(listToDo.get(i).getListItem(), listToDo.get(i).getComplete());
+        if(!list1.isSelectionEmpty()) {
+            listToDo.remove(listToDo.get(i));
+            setList();
         }
-        setList();
+    }
+
+    private void moveItem(int index, int direction){
+        ToDoListItem savedItem = new ToDoListItem(listToDo.get(index + direction).getListItem(),listToDo.get(index + direction).getComplete());
+        ToDoListItem movingItem = new ToDoListItem(listToDo.get(index).getListItem(),listToDo.get(index).getComplete());
+
+        if(index >=0 && index < listToDo.size()) {
+            listToDo.get(index).setListItem(savedItem.getListItem());
+            listToDo.get(index).setComplete(savedItem.getComplete());
+            listToDo.get(index + direction).setListItem(movingItem.getListItem());
+            listToDo.get(index + direction).setComplete(movingItem.getComplete());
+            setList();
+        }
+
+
+
     }
 
 
@@ -132,6 +144,22 @@ public class MainView extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
+            }
+        });
+        moveItemUp.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int index = list1.getSelectedIndex();
+                moveItem(index, -1);
+
+            }
+        });
+        moveItemDown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int index = list1.getSelectedIndex();
+                moveItem(index, 1);
+
             }
         });
     }
